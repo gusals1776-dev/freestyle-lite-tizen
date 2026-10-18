@@ -12,6 +12,8 @@ function startFreestyleService(assets, version) {
   var asset=assets[path];
   if(!Object.prototype.hasOwnProperty.call(assets,path)){res.writeHead(404,{'Cache-Control':'no-store'});res.end();return;}
   var data=asset.data,headers={'Content-Type':asset.type,'Content-Length':data.length,'X-Content-Type-Options':'nosniff','Cache-Control':path.indexOf('/tv/')===0?'no-store':'public, max-age=3600'};
+  // Installation can read only this public health/version response.
+  if(path==='/status'){headers['Access-Control-Allow-Origin']='*';headers['Cache-Control']='no-store';}
   res.writeHead(200,headers);if(req.method==='HEAD')res.end();else res.end(data);
  });
  server.on('error',function(err){console.error('Freestyle Lite service: '+String(err.code||'start-failed'));});

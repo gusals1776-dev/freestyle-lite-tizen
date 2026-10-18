@@ -8,7 +8,7 @@
   "websiteURL": "http://127.0.0.1:18769/tv",
   "main": "module.js",
   "serviceFile": "service.js",
-  "evaluateScriptOnDocumentStart": true,
+  "evaluateScriptOnDocumentStart": false,
   "license": "UNLICENSED",
   "keys": [
     "MediaPlayPause",

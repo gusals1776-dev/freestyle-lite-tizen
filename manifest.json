@@ -34,16 +34,16 @@
       "sha256": "ca8773cf798c7ed997d4dd7c8e23c348699f8d5b7462636694cc14de6cda12db"
     },
     "package.json": {
-      "bytes": 606,
-      "sha256": "89d838b633d2f12bff55b0c739a5dd41e084e7d73e7881f48e82ac0c13d26ac1"
+      "bytes": 607,
+      "sha256": "efea02dd57c9ed5c1340cc978b34af9d9cfa38ab0dfacec2523de714fcace9ad"
     },
     "service.js": {
-      "bytes": 928925,
-      "sha256": "5f6fe071332a6f99af50e763758df990959c88be25afdef7b053ce38ce24b488"
+      "bytes": 929098,
+      "sha256": "e8754d10c0e8835817d990a4620fd53549a75603cd727cdb52e90021826adac7"
     },
     "service-template.js": {
-      "bytes": 1302,
-      "sha256": "1b624252fa368ee0e15f9b469f6368262ce885af9bef1997b6fac8c5fedcc134"
+      "bytes": 1475,
+      "sha256": "83855efff8af971555d143f6deb4a1dc6837d6026664bd4c49cb077dd5bc34d1"
     },
     "THIRD_PARTY_NOTICES.md": {
       "bytes": 1859,
