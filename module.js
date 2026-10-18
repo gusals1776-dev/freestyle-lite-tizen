@@ -83,7 +83,7 @@ function freestyleModuleEntry(config, specificTools, genericTools, sitePlayer) {
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',begin,{once:true});else begin();
 }
 
-var config={"version":"0.4.0-rc.2","home":"http://127.0.0.1:18769/tv","portalUrl":"https://cdn.jsdelivr.net/gh/axelnanol/tizenportal@18160cec70153fc2d9a44dfffe26868e820ee41b/dist/tizenportal.js","portalIntegrity":"sha384-Stn/tMBQOu9fKp4eCfdYh6ZA1R/9PhkVR7kRqZCATlLtaCbOS45G82+HCHir8Ybo","player":{"returnUrl":"http://127.0.0.1:18769/tv","libraryUrl":"https://cdn.jsdelivr.net/npm/hls.js@1.7.3/dist/hls.min.js","libraryIntegrity":"sha384-cciJ0zi8d1uMKC2zJd7jvPY4HQt7W4ByUI/FlMkltvBi31aW61rcpVBhpmW8/NwX"}};config.playerHost=/^(?:www\.)?missav123\.com$/i;
+var config={"version":"0.4.0-rc.3","home":"http://127.0.0.1:18769/tv","portalUrl":"https://cdn.jsdelivr.net/gh/axelnanol/tizenportal@18160cec70153fc2d9a44dfffe26868e820ee41b/dist/tizenportal.js","portalIntegrity":"sha384-Stn/tMBQOu9fKp4eCfdYh6ZA1R/9PhkVR7kRqZCATlLtaCbOS45G82+HCHir8Ybo","player":{"returnUrl":"http://127.0.0.1:18769/tv","libraryUrl":"https://cdn.jsdelivr.net/npm/hls.js@1.7.3/dist/hls.min.js","libraryIntegrity":"sha384-cciJ0zi8d1uMKC2zJd7jvPY4HQt7W4ByUI/FlMkltvBi31aW61rcpVBhpmW8/NwX"}};config.playerHost=/^(?:www\.)?missav123\.com$/i;
 freestyleModuleEntry(config,function(runtime,options){var userscript={};(function querySiteTools(){
  var original=window.open,block=function(){return null;};window.open=block;
  var input=window.TizenPortal&&window.TizenPortal.input;if(input&&!input.isPointerMode())input.togglePointer();

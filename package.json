@@ -1,7 +1,7 @@
 {
   "name": "freestyle-lite-tizen",
   "private": true,
-  "version": "0.4.0-rc.2",
+  "version": "0.4.0-rc.3",
   "appName": "프리스타일 라이트",
   "description": "리모컨 브라우저와 즐겨찾기, HLS 호환 재생",
   "packageType": "mods",

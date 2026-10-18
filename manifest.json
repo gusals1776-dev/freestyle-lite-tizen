@@ -1,17 +1,17 @@
 {
-  "version": "0.4.0-rc.2",
+  "version": "0.4.0-rc.3",
   "files": {
     "index.html": {
-      "bytes": 4926,
-      "sha256": "9754d44d2371e96ea5e6e80e1ea3e5d67a96297b5e77ff7915452a77bb38b6d5"
+      "bytes": 4920,
+      "sha256": "d9994bcb134e08c3e952caf4c2905e57f8a1d24b1ecdd52a1ea74df3bc809f3e"
     },
     "app.css": {
       "bytes": 3412,
       "sha256": "ce5a5735153ba2e3f8b10abefab9591e4cc09f4d9b5a6476865c679112de43b6"
     },
     "app.js": {
-      "bytes": 25924,
-      "sha256": "038d3d521d748eb44ccbb3cd60b41abe8b31488082f77dcb2e9ae35bd9389987"
+      "bytes": 26343,
+      "sha256": "a12f202d6d7a7a740ba46dbaa3b159ba6b61bfd7edfdbec911baff0a01f40101"
     },
     "site-tools.js": {
       "bytes": 7256,
@@ -23,7 +23,7 @@
     },
     "module.js": {
       "bytes": 22282,
-      "sha256": "ef61fad6ff8f9bea16ddb841797f92d19b267287256193e20b56ed8f9d72f7d4"
+      "sha256": "d53d0403bc1544cc74772c29ab275dd4d375d3e115e9a94d3e152601b030eb8d"
     },
     "hls.min.js": {
       "bytes": 619692,
@@ -35,15 +35,15 @@
     },
     "package.json": {
       "bytes": 675,
-      "sha256": "b5a21bf095d74cb6653c1c7bf944962c8f6791ce221423ecf050834f641ff65d"
+      "sha256": "1344fab502bd64b1886bae2cf8cbc1df174ee29793c2d9170855506f4e7ad10f"
     },
     "bootstrap.html": {
       "bytes": 880,
-      "sha256": "aee866e9df6f4dece82cab516159d04015eec515841ff70c3e463ac237292628"
+      "sha256": "d5ddb6facee658f3533bbb17d4ac59dad94fedef0a563788b38797c0e2615961"
     },
     "service.js": {
-      "bytes": 929702,
-      "sha256": "9c5d9e5b04e602d312f1ea9beb78442c01a998b0012c3f22b97e8f529d8aa13d"
+      "bytes": 930250,
+      "sha256": "40fdc7c0593194b38169c0f66ace620fa20e94da7133056df621a0f78e5db4f8"
     },
     "service-template.js": {
       "bytes": 1475,
@@ -59,7 +59,7 @@
     },
     "README.md": {
       "bytes": 2516,
-      "sha256": "fb721f2f595409117327471866f043716f9a5e1f5af29a74066c9d17bec465eb"
+      "sha256": "530516c2594d410243b8cb4e0896eb28af26c35d97fbccce553007d9ab062ba6"
     },
     "build-service.mjs": {
       "bytes": 2156,

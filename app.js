@@ -53,15 +53,11 @@
   });
  }
  function editBookmark(id){
-  var item=bookmarks.items.filter(function(entry){return entry.id===id;})[0]||null;bookmarkEditing=item?item.id:null;el('bookmark-editor-title').textContent=item?'즐겨찾기 수정':'즐겨찾기 추가';el('bookmark-name').value=item?item.name:'';el('bookmark-url').value=item?item.url:el('web-url').value;el('bookmark-delete').hidden=!item;setView('bookmark-editor',item?'bookmark-save':'bookmark-name');
+  var item=bookmarks.items.filter(function(entry){return entry.id===id;})[0]||null;bookmarkEditing=item?item.id:null;el('bookmark-editor-title').textContent=item?'즐겨찾기 수정':'즐겨찾기 추가';el('bookmark-name').value=item?item.name:'';el('bookmark-url').value=item?item.url:el('web-url').value;el('bookmark-delete').hidden=!item;setView('bookmark-editor',item?'bookmark-save':'bookmark-url');
  }
  readBookmarks();renderBookmarks();
  el('bookmark-add').onclick=function(){editBookmark(null);};el('bookmark-cancel').onclick=home;
- el('bookmark-form').onsubmit=function(e){
-  e.preventDefault();
-  // The TV keyboard's Go action submits the form even in the name field.
-  // Treat that action as Next before validating or saving the address.
-  if(document.activeElement===el('bookmark-name')){el('bookmark-url').focus();return;}
+ el('bookmark-save').onclick=function(){
   try{
    if(!el('bookmark-url').value.trim())throw Error('저장할 주소를 입력해 주세요.');var url=safeUrl(el('bookmark-url').value);if(url.length>2048)throw Error('주소가 너무 길어요. 사이트의 기본 주소를 입력해 주세요.');var name=el('bookmark-name').value.trim().slice(0,60)||new URL(url).hostname;
    var index=bookmarks.items.findIndex(function(item){return item.id===bookmarkEditing;}),duplicate=bookmarks.items.findIndex(function(item){return item.url===url;});if(index>=0&&duplicate>=0&&index!==duplicate)throw Error('이미 저장한 주소예요. 기존 즐겨찾기를 수정해 주세요.');if(index<0)index=duplicate;
@@ -168,13 +164,23 @@
    if (along <= 2) return; var score = along + cross * 3; if (score < bestScore) { best = node; bestScore = score; }
   }); if (best) best.focus();
  }
+ function finishInput(){
+  var field=document.activeElement;
+  if(!field||field.tagName!=='INPUT')return;
+  field.blur();
+  var target=view==='bookmark-editor'?el('bookmark-save'):field.id==='web-url'?el('web-form').querySelector('button'):field.id==='video-url'?el('video-form').querySelector('button'):null;
+  if(target)target.focus();
+ }
  // This app owns its controls. Capture at window before the host shell's
  // document handler, so the same Enter does not also synthesize another click.
  window.addEventListener('keydown', function (e) {
   if (e.defaultPrevented) return;
   var k = e.keyCode || e.which, input = document.activeElement && document.activeElement.tagName === 'INPUT';
-  if (k === 10009 || k === 27 || k === 8 && !input) { e.preventDefault(); e.stopImmediatePropagation(); if (input) { document.activeElement.blur(); return; } if (view !== 'launcher') home(); else if (history.length > 1) history.back(); return; }
-  if (input) {var ime=window.TizenPortal&&TizenPortal.input&&TizenPortal.input.isIMEActive&&TizenPortal.input.isIMEActive();if(!ime&&(k===38||k===40)){e.preventDefault();e.stopImmediatePropagation();if(view==='bookmark-editor'){var field=document.activeElement.id;el(k===40?(field==='bookmark-name'?'bookmark-url':'bookmark-save'):(field==='bookmark-url'?'bookmark-name':'home')).focus();}else move(k);}return;}
+  // Samsung IME sends Done/Cancel rather than a form submit or Enter.
+  // Leave text input defaults intact; move focus to an explicit action button.
+  if(input&&(k===65376||k===65385)){e.stopImmediatePropagation();finishInput();return;}
+  if (k === 10009 || k === 27 || k === 8 && !input) { e.preventDefault(); e.stopImmediatePropagation(); if (input) { finishInput(); return; } if (view !== 'launcher') home(); else if (history.length > 1) history.back(); return; }
+  if (input) {var ime=window.TizenPortal&&TizenPortal.input&&TizenPortal.input.isIMEActive&&TizenPortal.input.isIMEActive();if(!ime&&k===13&&view==='bookmark-editor'){e.preventDefault();e.stopImmediatePropagation();finishInput();return;}if(!ime&&(k===38||k===40)){e.preventDefault();e.stopImmediatePropagation();if(view==='bookmark-editor'){var field=document.activeElement.id;el(k===40?(field==='bookmark-url'?'bookmark-name':'bookmark-save'):(field==='bookmark-name'?'bookmark-url':'home')).focus();}else move(k);}return;}
   if (k >= 37 && k <= 40) { e.preventDefault(); e.stopImmediatePropagation(); move(k); }
   else if (k === 13 && document.activeElement && document.activeElement.tagName === 'BUTTON') { e.preventDefault(); e.stopImmediatePropagation(); if (!e.repeat) document.activeElement.click(); }
   else if (view === 'player-view' && (k === 10252 || k === 415 || k === 19)) { e.preventDefault(); e.stopImmediatePropagation(); if (e.repeat) return; if (k === 19) video.pause(); else if (k === 415) play(); else el('toggle').click(); }
