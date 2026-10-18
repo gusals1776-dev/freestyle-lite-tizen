@@ -58,7 +58,11 @@
  readBookmarks();renderBookmarks();
  el('bookmark-add').onclick=function(){editBookmark(null);};el('bookmark-cancel').onclick=home;
  el('bookmark-form').onsubmit=function(e){
-  e.preventDefault();try{
+  e.preventDefault();
+  // The TV keyboard's Go action submits the form even in the name field.
+  // Treat that action as Next before validating or saving the address.
+  if(document.activeElement===el('bookmark-name')){el('bookmark-url').focus();return;}
+  try{
    if(!el('bookmark-url').value.trim())throw Error('저장할 주소를 입력해 주세요.');var url=safeUrl(el('bookmark-url').value);if(url.length>2048)throw Error('주소가 너무 길어요. 사이트의 기본 주소를 입력해 주세요.');var name=el('bookmark-name').value.trim().slice(0,60)||new URL(url).hostname;
    var index=bookmarks.items.findIndex(function(item){return item.id===bookmarkEditing;}),duplicate=bookmarks.items.findIndex(function(item){return item.url===url;});if(index>=0&&duplicate>=0&&index!==duplicate)throw Error('이미 저장한 주소예요. 기존 즐겨찾기를 수정해 주세요.');if(index<0)index=duplicate;
    var items=bookmarks.items.slice();if(index<0){if(items.length>=40)throw Error('주소는 40개까지 저장할 수 있어요.');items.push({id:Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,9),name:name,url:url});}else items[index]={id:items[index].id,name:name,url:url};
