@@ -3,6 +3,8 @@
 // The build supplies tools, player and the pinned runtime configuration.
 function freestyleModuleEntry(config, specificTools, genericTools, sitePlayer) {
  'use strict';
+ // The host's launch page waits for the local service before opening home.
+ if(location.origin==='http://127.0.0.1:8081'&&/\/bootstrap\.html$/.test(location.pathname))return;
  if(window.top!==window||window.__freestyleModuleEntry)return;
  window.__freestyleModuleEntry=true;
  var home=config.home,own=location.origin===new URL(home).origin;

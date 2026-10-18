@@ -5,7 +5,7 @@
   "appName": "프리스타일 라이트",
   "description": "리모컨 브라우저와 즐겨찾기, HLS 호환 재생",
   "packageType": "mods",
-  "websiteURL": "http://127.0.0.1:18769/tv",
+  "websiteURL": "http://127.0.0.1:8081/module/gh%2Fgusals1776-dev%2Ffreestyle-lite-tizen%40main/bootstrap.html",
   "main": "module.js",
   "serviceFile": "service.js",
   "evaluateScriptOnDocumentStart": false,
