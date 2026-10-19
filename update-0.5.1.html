@@ -1,0 +1,42 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><title>프리스타일 라이트 업데이트 설치</title></head><body><p>기기 내부 연결로 업데이트를 준비하고 있어요.</p><script>(function(){
+ 'use strict';
+ if(!/Tizen/i.test(navigator.userAgent)||window.top!==window||window.__freestyleStandaloneInstall)return;
+ window.__freestyleStandaloneInstall=true;
+ var callback;try{callback=JSON.parse(decodeURIComponent(location.hash.slice(1)));var address=new URL(callback.origin);if(address.protocol!=='http:'||address.port!=='8769'||!/^192\.168\.\d{1,3}\.\d{1,3}$/.test(address.hostname)||!/[0-9a-f]{24}/.test(callback.run))return;callback=address.origin+'/telemetry?run='+callback.run;}catch(ignored){return;}
+ var identity='gh/gusals1776-dev/freestyle-lite-tizen@744b7a25fb5ba3d3c9b96ba5b112fa58a4063a42';
+ var socket=null,started=false,done=false,timer=null,deadline=null,attempts=0,serviceRequested=false;
+ var panel=document.createElement('div');panel.style.cssText='position:fixed;inset:0;z-index:2147483647;background:#10151d;color:white;padding:12vh 9vw;font:28px sans-serif';document.body.appendChild(panel);
+ function report(stage,error){var xhr=new XMLHttpRequest();xhr.open('POST',callback,true);xhr.setRequestHeader('Content-Type','text/plain');xhr.send(JSON.stringify({phase:'standalone-install',stage:stage,error:error||null,version:'0.5.1',userAgent:navigator.userAgent}));}
+ function stop(stage,error){if(done)return;done=true;clearTimeout(timer);clearTimeout(deadline);if(socket)socket.close();panel.textContent=stage==='installed'?'독립 앱 설치 완료 · 프리스타일 라이트를 여는 중':'설치를 완료하지 못했어요. 상태를 PC로 전달했습니다.';report(stage,error);}
+ function poll(){if(done)return;var xhr=new XMLHttpRequest();xhr.open('GET','http://127.0.0.1:18782/status',true);xhr.timeout=2000;xhr.onload=function(){var result;try{result=JSON.parse(xhr.responseText);}catch(ignored){}
+  if(xhr.status===200&&result&&result.app==='freestyle-light-installer'&&result.version==='0.5.1'){
+   if(result.stage==='installed'||result.stage==='failed'){stop(result.stage,result.error);return;}
+   panel.textContent='프리스타일 라이트 독립 앱 설치 중 · '+({connecting:'설치 연결',transferring:'설치 파일 전송',installing:'기기에 앱 설치'}[result.stage]||'준비');report(result.stage);
+  }timer=setTimeout(poll,500);
+ };xhr.onerror=xhr.ontimeout=function(){if(!done)timer=setTimeout(poll,500);};xhr.send();}
+ panel.textContent='프리스타일 라이트 독립 앱 설치를 준비하고 있어요.';report('opening-bridge');
+ deadline=setTimeout(function(){stop('timeout');},140000);
+ function requestExistingService(){
+  if(serviceRequested)return;serviceRequested=true;
+  // Start only the already-installed background service; never open/relaunch
+  // the TizenBrew UI or change the user's current page.
+  try{if(window.tizen&&tizen.application)tizen.application.launchAppControl(new tizen.ApplicationControl('http://tizen.org/appcontrol/operation/service'),'xvvl3S1bvH.StandaloneService',function(){report('bridge-service-requested');},function(error){report('bridge-service-error',String(error&&error.name||'unknown').replace(/[^a-zA-Z-]/g,'').slice(0,40));});}catch(ignored){}
+ }
+ function connect(){
+  if(done||started)return;if(++attempts>24){stop('bridge-unavailable');return;}
+  panel.textContent='업데이트 설치 연결을 준비하고 있어요.';
+  try{socket=new WebSocket('ws://127.0.0.1:8081');var current=socket,retried=false;
+   function again(){if(retried||done||started)return;retried=true;requestExistingService();try{current.close();}catch(ignored){}timer=setTimeout(connect,700);}
+   current.onopen=function(){current.send(JSON.stringify({type:1}));};current.onerror=again;current.onclose=again;
+   current.onmessage=function(event){if(done||started)return;var data;try{data=JSON.parse(event.data);}catch(ignored){return;}
+    if(data.type===1){if(!data.payload||typeof data.payload.tizenDebug!=='boolean'){stop('bridge-invalid');return;}
+     // SDB package installation needs the background service, not the host's
+     // page debugger. Another standalone app can currently own that debugger.
+     started=true;current.send(JSON.stringify({type:6,payload:{fullName:identity,serviceFile:'install-standalone-0.5.1.js'}}));report('starting-installer');poll();}
+   };
+  }catch(ignored){requestExistingService();timer=setTimeout(connect,700);}
+ }
+ connect();
+ window.addEventListener('pagehide',function(){clearTimeout(timer);clearTimeout(deadline);if(socket)socket.close();});
+})();
+</script></body></html>
