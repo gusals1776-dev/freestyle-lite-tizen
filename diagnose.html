@@ -1,0 +1,16 @@
+<!doctype html><html lang="ko"><meta charset="utf-8"><title>프리스타일 라이트 상태 확인</title><body style="background:#142333;color:white;font:28px sans-serif;padding:10vh"><p id="state">앱 상태를 읽고 있어요.</p><script>(function(){
+ 'use strict';
+ if(!/Tizen/i.test(navigator.userAgent)||window.top!==window)return;
+ var callback,address;try{callback=JSON.parse(decodeURIComponent(location.hash.slice(1)));address=new URL(callback.origin);if(address.protocol!=='http:'||address.port!=='8769'||!/^192\.168\.\d{1,3}\.\d{1,3}$/.test(address.hostname)||!/^([0-9a-f]{24})$/.test(callback.run)||!/^([0-9a-f]{40})$/.test(callback.releaseCommit))return;}catch(ignored){return;}
+ var socket,started=false,done=false,timer,deadline,panel=document.getElementById('state');
+ function report(stage,data){var xhr=new XMLHttpRequest();xhr.open('POST',address.origin+'/telemetry?run='+callback.run,true);xhr.setRequestHeader('Content-Type','text/plain');xhr.send(JSON.stringify({phase:'runtime-read',stage:stage,data:data||null}));}
+ function stop(stage){if(done)return;done=true;clearTimeout(timer);clearTimeout(deadline);if(socket)socket.close();panel.textContent=stage==='read'?'상태를 PC에 전달했어요.':'상태 확인이 끝났어요. 확인 결과를 PC에 전달했습니다.';report(stage);}
+ function poll(){if(done)return;var xhr=new XMLHttpRequest();xhr.open('GET','http://127.0.0.1:18799/status',true);xhr.timeout=2000;xhr.onload=function(){var value;try{value=JSON.parse(xhr.responseText);}catch(ignored){}if(value&&value.app==='freestyle-read-runtime'){report('snapshot',value);if(value.stage==='read'){stop('read');return;}panel.textContent=value.runtime?'앱 연결 상태를 확인하고 있어요.':'앱이 실행 중인지 확인하고 있어요.';}timer=setTimeout(poll,2000);};xhr.onerror=xhr.ontimeout=function(){if(!done)timer=setTimeout(poll,2000);};xhr.send();}
+ deadline=setTimeout(function(){stop('finished');},45000);
+ report('opening');
+ socket=new WebSocket('ws://127.0.0.1:8081');
+ socket.onopen=function(){socket.send(JSON.stringify({type:1}));};
+ socket.onmessage=function(event){if(started||done)return;var data;try{data=JSON.parse(event.data);}catch(ignored){return;}if(data.type!==1||!data.payload||typeof data.payload.tizenDebug!=='boolean')return;started=true;socket.send(JSON.stringify({type:6,payload:{fullName:'gh/gusals1776-dev/freestyle-lite-tizen@'+callback.releaseCommit,serviceFile:'read-runtime-1.js'}}));report('reading');poll();};
+ socket.onerror=function(){stop('bridge-unavailable');};
+ window.addEventListener('pagehide',function(){done=true;clearTimeout(timer);clearTimeout(deadline);if(socket)socket.close();});
+})();</script></body></html>
