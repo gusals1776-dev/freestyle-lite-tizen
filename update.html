@@ -8,7 +8,7 @@
  var socket=null,started=false,done=false,timer=null,deadline=null,attempts=0,serviceRequested=false;
  var panel=document.createElement('div');panel.style.cssText='position:fixed;inset:0;z-index:2147483647;background:#10151d;color:white;padding:12vh 9vw;font:28px sans-serif';document.body.appendChild(panel);
  function report(stage,error){var xhr=new XMLHttpRequest();xhr.open('POST',reportTarget,true);xhr.setRequestHeader('Content-Type','text/plain');xhr.send(JSON.stringify({phase:'standalone-install',stage:stage,error:error||null,version:releaseVersion,userAgent:navigator.userAgent}));}
- function stop(stage,error){if(done)return;done=true;clearTimeout(timer);clearTimeout(deadline);if(socket)socket.close();panel.textContent=stage==='installed'?'독립 앱 설치 완료 · 프리스타일 라이트를 여는 중':'설치를 완료하지 못했어요. 상태를 PC로 전달했습니다.';report(stage,error);}
+ function stop(stage,error){if(done)return;done=true;clearTimeout(timer);clearTimeout(deadline);if(socket)socket.close();panel.textContent=stage==='installed'?'설치 완료 · 앱 목록에서 프리스타일 라이트를 실행해 주세요.':'설치를 완료하지 못했어요. 상태를 PC로 전달했습니다.';report(stage,error);}
  function poll(){if(done)return;var xhr=new XMLHttpRequest();xhr.open('GET','http://127.0.0.1:'+installerPort+'/status',true);xhr.timeout=2000;xhr.onload=function(){var result;try{result=JSON.parse(xhr.responseText);}catch(ignored){}
   if(xhr.status===200&&result&&result.app==='freestyle-light-installer'&&result.version===releaseVersion){
    if(result.stage==='installed'||result.stage==='failed'){stop(result.stage,result.error);return;}
